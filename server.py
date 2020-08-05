@@ -17,7 +17,7 @@ def score(ipAddr, curTime, serverDict, team, key):
 				redScore += 1
 				serverDict.update({ipAddr : curTime})
 
-class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+class MyHandler(BaseHTTPRequestHandler):
 	def _set_headers(s):
 		s.send_response(200)
 		s.send_header("Content-type", "text/html")
@@ -28,9 +28,9 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
 	def do_GET(s):
 		s._set_headers()
-		s.wfile.write("<html><head><title>Scores</title></head>")
-		s.wfile.write("<body><p>Red: %d Blue: %d</p>" % (redScore, blueScore))
-		s.wfile.write("</body></html>")
+		s.wfile.write(b"<html><head><title>Scores</title></head>")
+		s.wfile.write(b"<body><p>Red: %d Blue: %d</p>" % (redScore, blueScore))
+		s.wfile.write(b"</body></html>")
 
 	def do_POST(s):
 		s._set_headers()
@@ -40,12 +40,12 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 		ipAddr = s.client_address[0]
 		curTime = time.time()
 		score(ipAddr, curTime, serverDict, jsonMessage["team"], jsonMessage["key"])
-		print("Red: %d Blue: %d" % (redScore, blueScore)
-		
+		print("Red: %d Blue: %d" % (redScore, blueScore))
+
 def run(server_class=HTTPServer, handler_class=MyHandler, port=8000):
 	server_address = ('', port)
 	httpd = server_class(server_address, handler_class)
-	httpd.socket = ssl.wrap_socket(https.socket, keyfile='/etc/ssl/private/cvc.key', certfile='/etc/ssl/certs/cvc.crt', server_side='True')
+	httpd.socket = ssl.wrap_socket(httpd.socket, keyfile='./server.key', certfile='./server.cert', server_side='True')
 	httpd.serve_forever()
 
 
