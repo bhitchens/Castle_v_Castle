@@ -10,10 +10,10 @@ def score(ipAddr, curTime, serverDict, team, key):
 		serverDict.update({ipAddr + "key" : key})
 	if (serverDict[ipAddr + "key"] == key):
 		if (curTime - serverDict[ipAddr] > 60):
-			if ("blue" in jsonMessage["team"]):
+			if ("blue" in team):
 				blueScore += 1
 				serverDict.update({ipAddr : curTime})
-			if ("red" in jsonMessage["team"]):
+			if ("red" in team):
 				redScore += 1
 				serverDict.update({ipAddr : curTime})
 
@@ -35,7 +35,7 @@ class MyHandler(BaseHTTPRequestHandler):
 	def do_POST(s):
 		s._set_headers()
 		content_length = int(s.headers['Content-Length'])
-		body = self.rfile.read(content_length)
+		body = s.rfile.read(content_length)
 		jsonMessage = json.loads(body)
 		ipAddr = s.client_address[0]
 		curTime = time.time()

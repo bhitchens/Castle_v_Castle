@@ -1,15 +1,15 @@
 import urllib, urllib.parse, urllib.request, json, sys, subprocess, ssl, os
 
-url = 'http://192.168.100.1'
+url = 'https://192.168.1.1:8000/'
 
 file = open('test', 'w')
 subprocess.Popen(("ipconfig"), stdout = file, stderr = file, shell = True)
-key = subprocess.check_output(("powershell.exe", "Get-FileHash", "test"))
 file.close()
+key = subprocess.check_output(("powershell.exe", "Get-FileHash", "test"))
 os.remove('test')
 
 data = {'key' : str(key),
-	'team' : sys.argv[1]'}
+	'team' : sys.argv[1]}
 
 params = json.dumps(data)
 request = urllib.request.Request(url, bytes(params, encoding='utf8'))
